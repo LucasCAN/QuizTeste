@@ -50,15 +50,15 @@ public class QuizDbHelper extends SQLiteOpenHelper {
     }
 
     private void fillPerguntasTable(){
-        Pergunta p1 = new Pergunta("A é correta","A","B","C",1 );
+        Pergunta p1 = new Pergunta("Qual a figura nos olhos?","Quadrado","Triângulo","Circulo",1 );
         addPergunta(p1);
-        Pergunta p2 = new Pergunta("B é correta","A","B","C",2 );
+        Pergunta p2 = new Pergunta("Qual a figura nos olhos?","Retângulo","Triângulo","Hexágono",2 );
         addPergunta(p2);
-        Pergunta p3 = new Pergunta("C é correta","A","B","C",3 );
+        Pergunta p3 = new Pergunta("Qual a figura nos olhos?","Circulo","Retângulo","Triângulo",3 );
         addPergunta(p3);
-        Pergunta p4 = new Pergunta("A é correta","A","B","C",1 );
+        Pergunta p4 = new Pergunta("Qual a figura nos olhos?","Triângulo","Hexágono","Retângulo",1 );
         addPergunta(p4);
-        Pergunta p5 = new Pergunta("A é correta","A","B","C",1 );
+        Pergunta p5 = new Pergunta("Qual a figura nos olhos?","Hexágono","Circulo","Triângulo",1 );
         addPergunta(p5);
 
     }
@@ -74,8 +74,8 @@ public class QuizDbHelper extends SQLiteOpenHelper {
         db.insert(PerguntasTable.TABLE_NAME, null, cv);
     }
 
-    public List<Pergunta> getAllPerguntas(){
-        List<Pergunta> perguntasList = new ArrayList<>();
+    public ArrayList<Pergunta> getAllPerguntas(){
+        ArrayList<Pergunta> perguntasList = new ArrayList<>();
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + PerguntasTable.TABLE_NAME, null);
 

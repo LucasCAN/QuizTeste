@@ -13,13 +13,20 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
-
     public static final String EXTRA_PONTUACAO = "extraPontuacao";
+
+    public static final String KEY_PONTUACAO = "keyPontuacao";
+    public static final String KEY_RESPONDIDO = "keyRespondido";
+    public static final String KEY_PERGUNTAS_COUNT = "keyPerguntasCount";
+    public static final String KEY_PERGUNTAS_LISTA = "keyPerguntasLista";
+
+
 
     private TextView textViewPergunta;
     private TextView textViewPontuacao;
@@ -32,7 +39,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private ColorStateList textColorDefaultRb;
 
-    private List<Pergunta> perguntaList;
+    private ArrayList<Pergunta> perguntaList;
     private int perguntasContador;
     private int perguntasTotal;
     private Pergunta atualPergunta;
@@ -59,13 +66,22 @@ public class QuizActivity extends AppCompatActivity {
 
         textColorDefaultRb = rb1.getTextColors();
 
-        QuizDbHelper dbHelper = new QuizDbHelper(this);
-        perguntaList = dbHelper.getAllPerguntas();
+        if(savedInstanceState == null) {
+            QuizDbHelper dbHelper = new QuizDbHelper(this);
+            perguntaList = dbHelper.getAllPerguntas();
+            perguntasTotal = perguntaList.size();
+            Collections.shuffle(perguntaList);
 
-        perguntasTotal = perguntaList.size();
-        Collections.shuffle(perguntaList);
+            showProxPergunta();
+        } else{
+            perguntaList = savedInstanceState.getParcelableArrayList(KEY_PERGUNTAS_LISTA);
+            perguntasTotal = perguntaList.size();
+            perguntasContador = savedInstanceState.getInt(KEY_PERGUNTAS_COUNT);
+            atualPergunta = perguntaList.get(perguntasContador - 1);
+            pontuacao = savedInstanceState.getInt(KEY_PONTUACAO);
+            respondida = savedInstanceState.getBoolean(KEY_RESPONDIDO);
 
-        showProxPergunta();
+        }
 
         buttonConfirmarProx.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,15 +145,15 @@ public class QuizActivity extends AppCompatActivity {
         switch (atualPergunta.getRespNum()){
             case 1:
                 rb1.setTextColor(Color.GREEN);
-                textViewPergunta.setText("Resposta 1 é a correta!");
+                textViewPergunta.setText("Resposta A é a correta!");
                 break;
             case 2:
                 rb2.setTextColor(Color.GREEN);
-                textViewPergunta.setText("Resposta 2 é a correta!");
+                textViewPergunta.setText("Resposta B é a correta!");
                 break;
             case 3:
                 rb3.setTextColor(Color.GREEN);
-                textViewPergunta.setText("Resposta 3 é a correta!");
+                textViewPergunta.setText("Resposta C é a correta!");
                 break;
         }
 
@@ -163,5 +179,14 @@ public class QuizActivity extends AppCompatActivity {
             Toast.makeText(this, "Pressione mais uma vez para sair!", Toast.LENGTH_SHORT).show();
         }
         backPressedTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_PONTUACAO, pontuacao);
+        outState.putBoolean(KEY_RESPONDIDO, respondida);
+        outState.putInt(KEY_PERGUNTAS_COUNT, perguntasContador);
+        outState.putParcelableArrayList(KEY_PERGUNTAS_LISTA,perguntaList);
     }
 }

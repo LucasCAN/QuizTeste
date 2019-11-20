@@ -1,6 +1,9 @@
 package com.example.luca_.quizteste;
 
-public class Pergunta {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Pergunta implements Parcelable {
     private String pergunta;
     private String opcao1;
     private String opcao2;
@@ -17,6 +20,40 @@ public class Pergunta {
         this.opcao3 = opcao3;
         this.respNum = respNum;
     }
+
+    protected Pergunta(Parcel in) {
+        pergunta = in.readString();
+        opcao1 = in.readString();
+        opcao2 = in.readString();
+        opcao3 = in.readString();
+        respNum = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(pergunta);
+        dest.writeString(opcao1);
+        dest.writeString(opcao2);
+        dest.writeString(opcao3);
+        dest.writeInt(respNum);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Pergunta> CREATOR = new Creator<Pergunta>() {
+        @Override
+        public Pergunta createFromParcel(Parcel in) {
+            return new Pergunta(in);
+        }
+
+        @Override
+        public Pergunta[] newArray(int size) {
+            return new Pergunta[size];
+        }
+    };
 
     public String getPergunta() {
         return pergunta;
